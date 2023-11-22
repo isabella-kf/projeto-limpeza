@@ -2,13 +2,13 @@
 
 -- Checar presença de nulos
 SELECT * FROM projeto.audible WHERE name IS NULL
-	OR author IS NULL
-	OR narrator IS NULL
-	OR time IS NULL
-	OR releasedate IS NULL
-	OR language IS NULL
-	OR stars IS NULL
-	OR price IS NULL;
+				OR author IS NULL
+				OR narrator IS NULL
+				OR time IS NULL
+				OR releasedate IS NULL
+				OR language IS NULL
+				OR stars IS NULL
+				OR price IS NULL;
 
 
 -- Checar presença de linhas duplicadas
