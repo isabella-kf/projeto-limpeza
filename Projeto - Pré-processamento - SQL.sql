@@ -68,6 +68,10 @@ SET
         ELSE NULL
     END;
 
+ -- Remover coluna 'author', permanecendo apenas as colunas com os nomes de cada autor separados
+ ALTER TABLE audible
+ DROP COLUMN author;
+
 
 -- Coluna 'narrator'
 -- Remover espaços extras
@@ -107,6 +111,9 @@ SET
         ELSE NULL
     END;
 
+ -- Remover coluna 'narrator', permanecendo apenas as colunas com os nomes de cada narrador separados
+ ALTER TABLE audible
+ DROP COLUMN narrator;
 
 -- Coluna 'time'
 -- Remover espaços extras
