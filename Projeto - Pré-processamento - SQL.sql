@@ -1,14 +1,14 @@
 -- Inspeção e pré-processamento gerais
 
 -- Checar presença de nulos
-select * from projeto.audible where name is null 
-	or author is null
-	or narrator is null
-	or time is null
-	or releasedate is null
-	or language is null
-	or stars is null
-	or price is null;
+SELECT * FROM projeto.audible WHERE name IS NULL
+	OR author IS NULL
+	OR narrator IS NULL
+	OR time IS NULL
+	OR releasedate IS NULL
+	OR language IS NULL
+	OR stars IS NULL
+	OR price IS NULL;
 
 
 -- Checar presença de linhas duplicadas
@@ -20,33 +20,33 @@ HAVING COUNT(*) > 1;
 
 -- Coluna 'name'
 -- Remover espaços extras
-update projeto.audible
-set name = TRIM(name);
+UPDATE projeto.audible
+SET name = TRIM(name);
 
 -- Remover espaços antes de ? e !
 UPDATE projeto.audible
-SET name = REPLACE(name, ' ?', '?')
-   , name = REPLACE(name, ' !', '!')
+SET name = REPLACE(name, ' ?', '?'),
+   	name = REPLACE(name, ' !', '!')
 WHERE name LIKE '% ?%' OR name LIKE '% !%';
 
 
 -- Coluna 'author'
 -- Remover espaços extras
-update projeto.audible
-set author = TRIM(author);
+UPDATE projeto.audible
+SET author = TRIM(author);
 
 -- Remover 'Writtenby:'
-update projeto.audible 
+UPDATE projeto.audible 
 SET author = REPLACE(author, 'Writtenby:', '')
 WHERE author LIKE '%Writtenby:%';
 
 -- Separar por autor
 -- Criar novas colunas para cada autor
-alter table projeto.audible
-add column author0 varchar(256),
-add column author1 varchar(256),
-add column author2 varchar(256),
-add column author3 varchar(256);
+ALTER TABLE projeto.audible
+ADD COLUMN author0 VARCHAR(256),
+ADD COLUMN author1 VARCHAR(256),
+ADD COLUMN author2 VARCHAR(256),
+ADD COLUMN author3 VARCHAR(256);
 
 -- Separar a coluna author em cada vírgula
 UPDATE projeto.audible
@@ -71,21 +71,21 @@ SET
 
 -- Coluna 'narrator'
 -- Remover espaços extras
-update projeto.audible
-set narrator = TRIM(narrator);
+UPDATE projeto.audible
+SET narrator = TRIM(narrator);
 
 -- Remover 'Narratedby:'
-update projeto.audible 
+UPDATE projeto.audible 
 SET narrator = REPLACE(narrator, 'Narratedby:', '')
 WHERE narrator LIKE '%Narratedby:%';
 
 -- Separar por narrador
 -- Criar novas colunas para cada narrador
-alter table projeto.audible
-add column narrator0 varchar(256),
-add column narrator1 varchar(256),
-add column narrator2 varchar(256),
-add column narrator3 varchar(256);
+ALTER TABLE projeto.audible
+ADD COLUMN narrator0 VARCHAR(256),
+ADD COLUMN narrator1 VARCHAR(256),
+ADD COLUMN narrator2 VARCHAR(256),
+ADD COLUMN narrator3 VARCHAR(256);
 
 -- Separar a coluna narrator em cada vírgula
 UPDATE projeto.audible
@@ -110,81 +110,81 @@ SET
 
 -- Coluna 'time'
 -- Remover espaços extras
-update projeto.audible
-set time = TRIM(time);
+UPDATE projeto.audible
+SET time = TRIM(time);
 
 -- Converter para minutos
-update projeto.audible
-set time = 
-	case
-		when (REGEXP_SUBSTR(time, '^[0-9]*') * 60) + REGEXP_SUBSTR(time, '[0-9]+(?= min$| mins$)') is null then (REGEXP_SUBSTR(time, '^[0-9]*') * 60)
-		else (REGEXP_SUBSTR(time, '^[0-9]*') * 60) + REGEXP_SUBSTR(time, '[0-9]+(?= min$| mins$)')
-	end
+UPDATE projeto.audible
+SET time = 
+	CASE
+		WHEN (REGEXP_SUBSTR(time, '^[0-9]*') * 60) + REGEXP_SUBSTR(time, '[0-9]+(?= min$| mins$)') IS NULL THEN (REGEXP_SUBSTR(time, '^[0-9]*') * 60)
+		ELSE (REGEXP_SUBSTR(time, '^[0-9]*') * 60) + REGEXP_SUBSTR(time, '[0-9]+(?= min$| mins$)')
+	END
 	
 -- Alterar tipo de dado para double
-alter table projeto.audible
-modify column time double;
+ALTER TABLE projeto.audible
+MODIFY COLUMN time DOUBLE;
 
 
 -- Coluna 'releasedate'
 -- Remover espaços extras
-update projeto.audible
-set releasedate = TRIM(releasedate);
+UPDATE projeto.audible
+SET releasedate = TRIM(releasedate);
 
 -- Converter datas para formato AAAA-MM-DD
-update projeto.audible
-SET releasedate = str_to_date(releasedate,'%d-%m-%Y');
+UPDATE projeto.audible
+SET releasedate = STR_TO_DATE(releasedate,'%d-%m-%Y');
 
 -- Alterar tipo de dado para date
-alter table projeto.audible
-modify column releasedate date;
+ALTER TABLE projeto.audible
+MODIFY COLUMN releasedate DATE;
 
 
 -- Coluna 'language'
 -- Capitalizar todos os valores
-update projeto.audible
-set language = CONCAT(UCASE(LEFT(language, 1)),SUBSTRING(language, 2)); -- Explicar o que é
+UPDATE projeto.audible
+SET language = CONCAT(UCASE(LEFT(language, 1)),SUBSTRING(language, 2));
 
 
 -- Coluna 'stars'
 -- Remover espaços extras
-update projeto.audible
-set stars = TRIM(stars);
+UPDATE projeto.audible
+SET stars = TRIM(stars);
 
 -- Adicionar coluna ratings
 ALTER TABLE projeto.audible 
 ADD COLUMN ratings int;
 
 update projeto.audible
-set ratings = 
-	case
-		when stars like 'Not rated yet' then 0
-		else REGEXP_SUBSTR(stars, '[0-9]+(?= rating$| ratings$)')
-	end
+SET ratings = 
+	CASE
+		WHEN stars LIKE 'Not rated yet' THEN 0
+		ELSE REGEXP_SUBSTR(stars, '[0-9]+(?= rating$| ratings$)')
+	END
 
 -- Apenas estrelas
-update projeto.audible
-set stars = REGEXP_SUBSTR(stars, '^[0-9].[0-9]*');
+UPDATE projeto.audible
+SET stars = REGEXP_SUBSTR(stars, '^[0-9].[0-9]*');
 
 -- Alterar tipo de dado para double
-alter table projeto.audible
-modify column stars double;
+ALTER TABLE projeto.audible
+MODIFY COLUMN stars double;
 
 
 -- Coluna 'price'
 -- Remover espaços extras
-update projeto.audible
-set price = TRIM(price);
+UPDATE projeto.audible
+SET price = TRIM(price);
 
 -- Remover vírgulas
-update projeto.audible
-set price = REPLACE(price, ',', '');
+UPDATE projeto.audible
+SET price = REPLACE(price, ',', '');
 
 -- Substituir 'Free' por 0
-update projeto.audible
-set price = REPLACE(price, 'Free', '0');
+UPDATE projeto.audible
+SET price = REPLACE(price, 'Free', '0');
 
 -- Alterar tipo de dado para double
-alter table projeto.audible
-modify column price double;
+ALTER TABLE projeto.audible
+MODIFY COLUMN price DOUBLE;
 
