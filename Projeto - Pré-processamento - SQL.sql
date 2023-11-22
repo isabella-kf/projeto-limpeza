@@ -115,6 +115,7 @@ SET
  ALTER TABLE audible
  DROP COLUMN narrator;
 
+
 -- Coluna 'time'
 -- Remover espaços extras
 UPDATE projeto.audible
