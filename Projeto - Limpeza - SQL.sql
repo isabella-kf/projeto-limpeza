@@ -1,4 +1,4 @@
--- Inspeção e pré-processamento gerais
+-- Inspeção e limpeza gerais
 
 -- Checar presença de nulos
 SELECT * FROM projeto.audible WHERE name IS NULL
