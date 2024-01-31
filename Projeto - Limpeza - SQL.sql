@@ -163,7 +163,7 @@ SET stars = TRIM(stars);
 ALTER TABLE projeto.audible 
 ADD COLUMN ratings int;
 
-update projeto.audible
+UPDATE projeto.audible
 SET ratings = 
 	CASE
 		WHEN stars LIKE 'Not rated yet' THEN 0
